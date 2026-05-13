@@ -1,0 +1,60 @@
+<div class="page">
+  <a routerLink="/vehicles" class="back">← Voltar à lista</a>
+
+  <h1>{{ mode === 'create' ? 'Novo veículo' : 'Editar veículo' }}</h1>
+
+  @if (loadError) {
+    <p class="error" role="alert">{{ loadError }}</p>
+  } @else if (loading) {
+    <p class="muted">Carregando dados…</p>
+  } @else {
+    @if (submitError) {
+      <p class="error" role="alert">{{ submitError }}</p>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="form">
+      <label class="field">
+        <span class="field__label">Placa *</span>
+        <input type="text" formControlName="placa" autocomplete="off" class="field__input" />
+        @if (form.controls.placa.touched && form.controls.placa.invalid) {
+          <span class="field__err">7 a 10 caracteres.</span>
+        }
+      </label>
+
+      <label class="field">
+        <span class="field__label">Chassi (VIN) * — 17 caracteres</span>
+        <input type="text" formControlName="chassi" maxlength="17" autocomplete="off" class="field__input" />
+        @if (form.controls.chassi.touched && form.controls.chassi.errors?.['chassiLength']) {
+          <span class="field__err">Informe exatamente 17 caracteres.</span>
+        }
+      </label>
+
+      <label class="field">
+        <span class="field__label">Renavam *</span>
+        <input type="text" formControlName="renavam" class="field__input" />
+      </label>
+
+      <label class="field">
+        <span class="field__label">Marca *</span>
+        <input type="text" formControlName="marca" class="field__input" />
+      </label>
+
+      <label class="field">
+        <span class="field__label">Modelo *</span>
+        <input type="text" formControlName="modelo" class="field__input" />
+      </label>
+
+      <label class="field">
+        <span class="field__label">Ano * (1900 a {{ maxAnoVal }})</span>
+        <input type="number" formControlName="ano" class="field__input" />
+      </label>
+
+      <div class="actions">
+        <button type="submit" class="btn btn--primary" [disabled]="form.invalid">
+          {{ mode === 'create' ? 'Cadastrar' : 'Salvar' }}
+        </button>
+        <a routerLink="/vehicles" class="btn">Cancelar</a>
+      </div>
+    </form>
+  }
+</div>

@@ -1,0 +1,47 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--app-bg);
+  color: var(--app-text);
+}
+
+.app__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid var(--app-border);
+  background: var(--app-surface);
+}
+
+.app__brand {
+  font-weight: 600;
+  text-decoration: none;
+  color: inherit;
+}
+
+.app__nav {
+  display: flex;
+  gap: 1rem;
+
+  a {
+    color: var(--app-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+
+    &:hover {
+      color: var(--app-text);
+    }
+
+    &.active {
+      color: var(--app-accent);
+      font-weight: 500;
+    }
+  }
+}
+
+.app__main {
+  flex: 1;
+}

@@ -1,0 +1,89 @@
+<div class="page">
+  <header class="page__header">
+    <h1>Veículos</h1>
+    <a routerLink="/vehicles/new" class="btn btn--primary">Novo veículo</a>
+  </header>
+
+  <section class="toolbar">
+    <label class="field">
+      <span class="field__label">Buscar (placa, modelo ou marca)</span>
+      <input
+        type="search"
+        [(ngModel)]="searchInput"
+        (ngModelChange)="onSearchInput()"
+        (keyup.enter)="load()"
+        placeholder="Ex.: Gol"
+        class="field__input"
+      />
+    </label>
+    <button type="button" class="btn" (click)="load()">Atualizar</button>
+  </section>
+
+  @if (loading) {
+    <p class="muted">Carregando…</p>
+  } @else if (error) {
+    <p class="error" role="alert">{{ error }}</p>
+    <p class="muted">Confira se a API está em execução (ex.: <code>npm run start:dev</code> na pasta <code>api</code>).</p>
+  } @else if (result) {
+    <div class="meta">
+      <span>{{ result.meta.total }} registro(s)</span>
+      <span>Página {{ result.meta.page }} de {{ result.meta.totalPages || 1 }}</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Placa</th>
+            <th>Marca / modelo</th>
+            <th>Ano</th>
+            <th>Renavam</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (v of result.data; track v.id) {
+            <tr>
+              <td><strong>{{ v.placa }}</strong></td>
+              <td>{{ v.marca }} {{ v.modelo }}</td>
+              <td>{{ v.ano }}</td>
+              <td class="muted">{{ v.renavam }}</td>
+              <td class="actions">
+                <a [routerLink]="['/vehicles', v.id]" class="link">Ver</a>
+                <a [routerLink]="['/vehicles', v.id, 'edit']" class="link">Editar</a>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="muted">Nenhum veículo encontrado.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (result.meta.totalPages > 1) {
+      <nav class="pager" aria-label="Paginação">
+        <button type="button" class="btn" [disabled]="page <= 1" (click)="goToPage(1)">Primeira</button>
+        <button type="button" class="btn" [disabled]="page <= 1" (click)="goToPage(page - 1)">Anterior</button>
+        <span class="pager__info">{{ page }} / {{ result.meta.totalPages }}</span>
+        <button
+          type="button"
+          class="btn"
+          [disabled]="page >= result.meta.totalPages"
+          (click)="goToPage(page + 1)"
+        >
+          Próxima
+        </button>
+        <button
+          type="button"
+          class="btn"
+          [disabled]="page >= result.meta.totalPages"
+          (click)="goToPage(result.meta.totalPages)"
+        >
+          Última
+        </button>
+      </nav>
+    }
+  }
+</div>
