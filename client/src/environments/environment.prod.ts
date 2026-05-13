@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  /** Em deploy, aponte para a URL pública da API. */
+  /** Valor padrão para dev; no Docker o build substitui por `API_BASE_URL`. */
   apiBaseUrl: 'http://localhost:3000',
 };

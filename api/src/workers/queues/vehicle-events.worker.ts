@@ -16,7 +16,7 @@ export class VehicleEventsWorker {
     queue: QUEUE_NAME,
     exchange: '',
     routingKey: QUEUE_NAME,
-    createQueueIfNotExists: false,
+    createQueueIfNotExists: true,
     queueOptions: {
       durable: true,
       arguments: {
