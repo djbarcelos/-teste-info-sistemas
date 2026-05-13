@@ -1,0 +1,28 @@
+.env
+**/.env
+
+# Dependências
+node_modules/
+**/node_modules/
+
+# Build
+dist/
+**/dist/
+build/
+**/build/
+
+# Coverage
+coverage/
+**/coverage/
+
+# Prisma
+**/prisma/migrations/**/migration_lock.toml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp

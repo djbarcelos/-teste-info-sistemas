@@ -2,44 +2,62 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--app-bg);
-  color: var(--app-text);
+  background: var(--apple-bg);
 }
 
 .app__bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 0.5px solid var(--apple-separator);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+
+.app__bar-inner {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0.5rem 1rem 0.65rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.75rem 1.25rem;
-  border-bottom: 1px solid var(--app-border);
-  background: var(--app-surface);
 }
 
 .app__brand {
-  font-weight: 600;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
   text-decoration: none;
-  color: inherit;
+  color: var(--apple-label-primary);
 }
 
 .app__nav {
   display: flex;
-  gap: 1rem;
+  align-items: center;
+  gap: 0.25rem;
+}
 
-  a {
-    color: var(--app-muted);
-    text-decoration: none;
-    font-size: 0.9rem;
+.app__nav-link {
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--apple-blue);
+  text-decoration: none;
 
-    &:hover {
-      color: var(--app-text);
-    }
-
-    &.active {
-      color: var(--app-accent);
-      font-weight: 500;
-    }
+  &:hover {
+    background: rgba(0, 122, 255, 0.08);
   }
+
+  &.active {
+    background: rgba(0, 122, 255, 0.12);
+    color: var(--apple-blue);
+  }
+}
+
+.app__nav-link--accent {
+  font-weight: 600;
 }
 
 .app__main {

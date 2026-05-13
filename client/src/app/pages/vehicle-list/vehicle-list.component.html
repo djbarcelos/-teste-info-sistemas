@@ -1,89 +1,107 @@
 <div class="page">
-  <header class="page__header">
-    <h1>Veículos</h1>
-    <a routerLink="/vehicles/new" class="btn btn--primary">Novo veículo</a>
+  <header class="page__hero">
+    <h1 class="page__title">Veículos</h1>
+    <p class="page__subtitle">Gerencie a frota.</p>
   </header>
 
-  <section class="toolbar">
-    <label class="field">
-      <span class="field__label">Buscar (placa, modelo ou marca)</span>
-      <input
-        type="search"
-        [(ngModel)]="searchInput"
-        (ngModelChange)="onSearchInput()"
-        (keyup.enter)="load()"
-        placeholder="Ex.: Gol"
-        class="field__input"
-      />
-    </label>
-    <button type="button" class="btn" (click)="load()">Atualizar</button>
-  </section>
+  <div class="search-card">
+    <span class="search-card__icon" aria-hidden="true">⌕</span>
+    <input
+      type="search"
+      [(ngModel)]="searchInput"
+      (ngModelChange)="onSearchInput()"
+      (keyup.enter)="load()"
+      placeholder="Buscar por placa, modelo ou marca"
+      class="search-card__input"
+      autocomplete="off"
+    />
+    <button type="button" class="search-card__refresh" (click)="load()" title="Atualizar">↻</button>
+  </div>
+
+  <div class="toolbar-row">
+    <button type="button" class="pill-button pill-button--filled" (click)="openCreateModal()">
+      Novo veículo
+    </button>
+  </div>
 
   @if (loading) {
-    <p class="muted">Carregando…</p>
+    <p class="state state--muted">Carregando…</p>
   } @else if (error) {
-    <p class="error" role="alert">{{ error }}</p>
-    <p class="muted">Confira se a API está em execução (ex.: <code>npm run start:dev</code> na pasta <code>api</code>).</p>
+    <div class="state state--error" role="alert">
+      <p>{{ error }}</p>
+      <p class="state__hint">Confira se a API está em execução (pasta <code>api</code>, <code>npm run start:dev</code>).</p>
+    </div>
   } @else if (result) {
-    <div class="meta">
-      <span>{{ result.meta.total }} registro(s)</span>
-      <span>Página {{ result.meta.page }} de {{ result.meta.totalPages || 1 }}</span>
+    <div class="list-meta">
+      <span>{{ result.meta.total }} {{ result.meta.total === 1 ? 'veículo' : 'veículos' }}</span>
+      @if (result.meta.totalPages > 1) {
+        <span class="list-meta__page">Página {{ result.meta.page }} de {{ result.meta.totalPages }}</span>
+      }
     </div>
 
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Placa</th>
-            <th>Marca / modelo</th>
-            <th>Ano</th>
-            <th>Renavam</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (v of result.data; track v.id) {
-            <tr>
-              <td><strong>{{ v.placa }}</strong></td>
-              <td>{{ v.marca }} {{ v.modelo }}</td>
-              <td>{{ v.ano }}</td>
-              <td class="muted">{{ v.renavam }}</td>
-              <td class="actions">
-                <a [routerLink]="['/vehicles', v.id]" class="link">Ver</a>
-                <a [routerLink]="['/vehicles', v.id, 'edit']" class="link">Editar</a>
-              </td>
-            </tr>
-          } @empty {
-            <tr>
-              <td colspan="5" class="muted">Nenhum veículo encontrado.</td>
-            </tr>
+    <ul class="ios-list" role="list">
+      @for (v of result.data; track v.id) {
+        <li class="ios-list__item" [attr.data-menu-row]="v.id">
+          <div class="ios-list__row">
+            <div class="ios-list__main">
+              <span class="ios-list__title">{{ v.placa }}</span>
+              <span class="ios-list__subtitle">{{ v.marca }} {{ v.modelo }} · {{ v.ano }}</span>
+            </div>
+            <button
+              type="button"
+              class="ios-list__menu-btn"
+              [class.ios-list__menu-btn--open]="openMenuVehicleId === v.id"
+              (click)="toggleMenu(v.id, $event)"
+              [attr.aria-expanded]="openMenuVehicleId === v.id"
+              aria-haspopup="true"
+              aria-label="Ações do veículo"
+            >
+              ···
+            </button>
+          </div>
+          @if (openMenuVehicleId === v.id) {
+            <div class="ios-row-menu" role="menu" (click)="$event.stopPropagation()">
+              <button type="button" class="ios-row-menu__item" role="menuitem" (click)="openDetailModal(v)">
+                Visualizar
+              </button>
+              <button type="button" class="ios-row-menu__item" role="menuitem" (click)="openEditModal(v)">
+                Editar
+              </button>
+              <button type="button" class="ios-row-menu__item ios-row-menu__item--destructive" role="menuitem" (click)="deleteVehicle(v)">
+                Excluir
+              </button>
+            </div>
           }
-        </tbody>
-      </table>
-    </div>
+        </li>
+      } @empty {
+        <li class="ios-list__empty">Nenhum veículo encontrado.</li>
+      }
+    </ul>
 
     @if (result.meta.totalPages > 1) {
-      <nav class="pager" aria-label="Paginação">
-        <button type="button" class="btn" [disabled]="page <= 1" (click)="goToPage(1)">Primeira</button>
-        <button type="button" class="btn" [disabled]="page <= 1" (click)="goToPage(page - 1)">Anterior</button>
-        <span class="pager__info">{{ page }} / {{ result.meta.totalPages }}</span>
-        <button
-          type="button"
-          class="btn"
-          [disabled]="page >= result.meta.totalPages"
-          (click)="goToPage(page + 1)"
-        >
-          Próxima
-        </button>
-        <button
-          type="button"
-          class="btn"
-          [disabled]="page >= result.meta.totalPages"
-          (click)="goToPage(result.meta.totalPages)"
-        >
-          Última
-        </button>
-      </nav>
+      <div class="pager">
+        <button type="button" class="pager__btn" [disabled]="page <= 1" (click)="goToPage(1)">«</button>
+        <button type="button" class="pager__btn" [disabled]="page <= 1" (click)="goToPage(page - 1)">‹</button>
+        <span class="pager__label">{{ page }} / {{ result.meta.totalPages }}</span>
+        <button type="button" class="pager__btn" [disabled]="page >= result.meta.totalPages" (click)="goToPage(page + 1)">›</button>
+        <button type="button" class="pager__btn" [disabled]="page >= result.meta.totalPages" (click)="goToPage(result.meta.totalPages)">»</button>
+      </div>
     }
   }
 </div>
+
+<app-vehicle-form-modal
+  [open]="formModalOpen"
+  [mode]="formModalMode"
+  [vehicleId]="formModalVehicleId"
+  (openChange)="formModalOpen = $event"
+  (saved)="onVehicleSaved()"
+/>
+
+<app-vehicle-detail-modal
+  [open]="detailModalOpen"
+  [vehicleId]="detailVehicleId"
+  (openChange)="detailModalOpen = $event"
+  (deleted)="onVehicleDeletedFromDetail()"
+  (editRequested)="onEditFromDetail($event)"
+/>

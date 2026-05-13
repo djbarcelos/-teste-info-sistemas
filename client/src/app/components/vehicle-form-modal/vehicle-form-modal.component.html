@@ -1,0 +1,107 @@
+@if (open) {
+  <div
+    class="modal-backdrop"
+    role="presentation"
+    (click)="dismiss()"
+  ></div>
+  <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <header class="modal-sheet__header">
+      <button type="button" class="modal-sheet__cancel" (click)="dismiss()">Cancelar</button>
+      <h2 id="modal-title" class="modal-sheet__title">
+        @if (mode === 'create') {
+          Novo veículo
+        } @else {
+          Editar veículo
+        }
+      </h2>
+      <span class="modal-sheet__spacer" aria-hidden="true"></span>
+    </header>
+
+    <div class="modal-sheet__body">
+      @if (loadError) {
+        <p class="modal-sheet__banner" role="alert">{{ loadError }}</p>
+      }
+      @if (submitError) {
+        <p class="modal-sheet__banner" role="alert">{{ submitError }}</p>
+      }
+
+      @if (loadingVehicle) {
+        <p class="modal-sheet__loading">Carregando…</p>
+      } @else if (!loadError || mode === 'create') {
+        <form [formGroup]="form" (ngSubmit)="submit()" class="ios-form">
+          <div class="ios-group">
+            <label class="ios-row">
+              <span class="ios-row__label">Placa</span>
+              <input
+                type="text"
+                formControlName="placa"
+                class="ios-row__control"
+                placeholder="Obrigatório"
+                autocomplete="off"
+              />
+            </label>
+            <div class="ios-separator"></div>
+            <label class="ios-row">
+              <span class="ios-row__label">Chassi</span>
+              <input
+                type="text"
+                formControlName="chassi"
+                maxlength="17"
+                class="ios-row__control"
+                placeholder="17 caracteres"
+                autocomplete="off"
+              />
+            </label>
+            <div class="ios-separator"></div>
+            <label class="ios-row">
+              <span class="ios-row__label">Renavam</span>
+              <input type="text" formControlName="renavam" class="ios-row__control" placeholder="Obrigatório" />
+            </label>
+          </div>
+
+          <div class="ios-group">
+            <label class="ios-row">
+              <span class="ios-row__label">Marca</span>
+              <input type="text" formControlName="marca" class="ios-row__control" placeholder="Obrigatório" />
+            </label>
+            <div class="ios-separator"></div>
+            <label class="ios-row">
+              <span class="ios-row__label">Modelo</span>
+              <input type="text" formControlName="modelo" class="ios-row__control" placeholder="Obrigatório" />
+            </label>
+            <div class="ios-separator"></div>
+            <label class="ios-row ios-row--select">
+              <span class="ios-row__label">Ano do modelo</span>
+              <select formControlName="ano" class="ios-row__select">
+                @for (y of yearChoices; track y) {
+                  <option [ngValue]="y">{{ y }}</option>
+                }
+              </select>
+            </label>
+          </div>
+
+          @if (form.touched && form.invalid) {
+            <p class="ios-footnote">
+              @if (form.controls.placa.invalid) {
+                Placa: 7 a 10 caracteres.
+              }
+              @if (form.controls.chassi.errors?.['chassiLength']) {
+                Chassi deve ter 17 caracteres.
+              }
+            </p>
+          }
+
+          <button type="submit" class="ios-button ios-button--primary" [disabled]="form.invalid || submitting">
+            @if (submitting) {
+              Salvando…
+            } @else if (mode === 'create') {
+              Adicionar veículo
+            } @else {
+              Salvar alterações
+            }
+          </button>
+        </form>
+      }
+    </div>
+  </div>
+}

@@ -1,0 +1,56 @@
+@if (open) {
+  <div class="modal-backdrop" role="presentation" (click)="dismiss()"></div>
+  <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="detail-modal-title">
+    <header class="modal-sheet__header">
+      <button type="button" class="modal-sheet__cancel" (click)="dismiss()">Fechar</button>
+      <h2 id="detail-modal-title" class="modal-sheet__title">Veículo</h2>
+      <span class="modal-sheet__spacer" aria-hidden="true"></span>
+    </header>
+
+    <div class="modal-sheet__body">
+      @if (loading) {
+        <p class="modal-sheet__state">Carregando…</p>
+      } @else if (error) {
+        <p class="modal-sheet__banner" role="alert">{{ error }}</p>
+      } @else if (vehicle) {
+        <div class="detail-hero">
+          <p class="detail-hero__plate">{{ vehicle.placa }}</p>
+          <p class="detail-hero__sub">{{ vehicle.marca }} {{ vehicle.modelo }} · {{ vehicle.ano }}</p>
+        </div>
+
+        <div class="detail-actions">
+          <button type="button" class="ios-button ios-button--primary" (click)="requestEdit()">Editar</button>
+          <button type="button" class="ios-button ios-button--destructive" [disabled]="deleting" (click)="delete()">
+            @if (deleting) {
+              Removendo…
+            } @else {
+              Excluir
+            }
+          </button>
+        </div>
+
+        <section class="ios-group">
+          <div class="detail-row">
+            <span class="detail-row__label">Chassi</span>
+            <span class="detail-row__value mono">{{ vehicle.chassi }}</span>
+          </div>
+          <div class="ios-separator"></div>
+          <div class="detail-row">
+            <span class="detail-row__label">Renavam</span>
+            <span class="detail-row__value">{{ vehicle.renavam }}</span>
+          </div>
+          <div class="ios-separator"></div>
+          <div class="detail-row">
+            <span class="detail-row__label">Criado</span>
+            <span class="detail-row__value">{{ vehicle.createdAt | date: 'medium' }}</span>
+          </div>
+          <div class="ios-separator"></div>
+          <div class="detail-row">
+            <span class="detail-row__label">Atualizado</span>
+            <span class="detail-row__value">{{ vehicle.updatedAt | date: 'medium' }}</span>
+          </div>
+        </section>
+      }
+    </div>
+  </div>
+}

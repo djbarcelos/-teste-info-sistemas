@@ -1,10 +1,21 @@
 <div class="app">
   <header class="app__bar">
-    <a routerLink="/vehicles" class="app__brand">Veículos</a>
-    <nav class="app__nav">
-      <a routerLink="/vehicles" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Listagem</a>
-      <a routerLink="/vehicles/new" routerLinkActive="active">Novo</a>
-    </nav>
+    <div class="app__bar-inner">
+      <a routerLink="/vehicles" class="app__brand">Veículos</a>
+      <nav class="app__nav">
+        <a
+          routerLink="/vehicles"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="app__nav-link"
+        >
+          Lista
+        </a>
+        <a routerLink="/vehicles" [queryParams]="{ criar: '1' }" class="app__nav-link app__nav-link--accent">
+          Novo
+        </a>
+      </nav>
+    </div>
   </header>
   <main class="app__main">
     <router-outlet />

@@ -1,12 +1,35 @@
+/**
+ * Tokens inspirados no Human Interface Guidelines (Apple):
+ * tipografia do sistema, cores semânticas, materiais com blur e hierarquia clara.
+ */
 :root {
-  --app-bg: #f4f5f7;
-  --app-surface: #ffffff;
-  --app-surface-alt: #f0f1f4;
-  --app-text: #1a1d21;
-  --app-muted: #5c6370;
-  --app-border: #d8dce3;
-  --app-accent: #2563eb;
-  --app-danger: #b91c1c;
+  --apple-bg: #f2f2f7;
+  --apple-elevated: #ffffff;
+  --apple-group-bg: #ffffff;
+  --apple-label-primary: #000000;
+  --apple-label: rgba(60, 60, 67, 0.6);
+  --apple-secondary: rgba(60, 60, 67, 0.6);
+  --apple-placeholder: rgba(60, 60, 67, 0.3);
+  --apple-separator: rgba(60, 60, 67, 0.29);
+  --apple-blue: #007aff;
+  --apple-red: #ff3b30;
+  --apple-green: #34c759;
+  --apple-orange: #ff9500;
+  --apple-radius-sm: 10px;
+  --apple-radius-md: 12px;
+  --apple-radius-lg: 14px;
+  --apple-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --apple-shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+  /* Alias legado usado em telas antigas → mapear para tokens Apple */
+  --app-bg: var(--apple-bg);
+  --app-surface: var(--apple-elevated);
+  --app-surface-alt: rgba(120, 120, 128, 0.08);
+  --app-text: var(--apple-label-primary);
+  --app-muted: var(--apple-secondary);
+  --app-border: var(--apple-separator);
+  --app-accent: var(--apple-blue);
+  --app-danger: var(--apple-red);
 }
 
 *,
@@ -15,15 +38,28 @@
   box-sizing: border-box;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
   font-family:
-    system-ui,
     -apple-system,
-    'Segoe UI',
-    Roboto,
-    Ubuntu,
+    BlinkMacSystemFont,
+    'SF Pro Text',
+    'SF Pro Display',
+    system-ui,
     sans-serif;
-  background: var(--app-bg);
-  color: var(--app-text);
+  font-size: 17px;
+  line-height: 1.35;
+  letter-spacing: -0.022em;
+  background: var(--apple-bg);
+  color: var(--apple-label-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+code {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 0.85em;
 }
